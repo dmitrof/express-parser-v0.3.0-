@@ -39,6 +39,9 @@ dbHelper.initDB(function(err) {
     console.log('listening to port 3000');
     app.listen(port); //database is initialized, ready to listen for connections
     this.db = require('./dbHelper').db;
+    this.yParser = require('./yParser').yParser;
+    this.yParser.setDB(db);
+    this.parserRouter = require('./parserRouter').parserRouter;
 });
 
 var quotesProvider = require('./dbHelper').quotesProvider;
@@ -53,12 +56,34 @@ app.get('/add_quote', function(req, res) {
     res.render('add_quote', {title : "HELLO___PAGE"});
 });
 
+app.get('/add_yt', function(req, res) {
+    this.yParser.addVideoById('Im69kzhpR3I', function(err, tr_state) {
+        if (err) {console.log(err); res.send(tr_state);}
+        res.send(tr_state);
+    });
+
+});
+
+app.get('sources_list', function(req, res) {
+    //sources list and form
+    res.render('sources_list', {title : "sources_list"});
+});
+
+app.post('/add_source', function(req, res) {
+    var source_url = req.body.sousrce_url,
+        source_type = req.body.source_type;
+    console.log(source_type.concat(url));
+    app.parserRouter.addSource(req.body);
+    res.render('add_quote', {qresponse : qresponse});
+});
+
+
 app.get('/quotes', function(req, res) {
     var collection = db.collection('quotes');
     var quotes;
     quotesProvider.getAllQuotes(function(err, quotes) {
         if (err) {console.log(err)}
-        console.log(quotes);
+        //console.log(quotes);
         res.send(quotes.toArray());
     })
 });

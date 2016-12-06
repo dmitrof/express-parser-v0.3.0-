@@ -30,7 +30,25 @@ module.exports.initDB = function(callback) {
 };
 
 
-//Test quotes provider
+
+//класс для работы с "абстрактными" документами в БД
+DocProvider = {
+    addDoc : function(doc, collection, callback) {
+        //db.createCollection('quotes', {w:1}, function(err, collection) {});
+        var collection = db.collection(collection);
+        collection.insert(doc, function(err, ok) {
+            if (err) {
+                console.log(err);
+                callback(err);
+            }
+            else {
+                console.log('saved to db');
+                callback(null, ok)
+            }
+        });
+    },
+}
+
 QuotesProvider = {
     addQuote : function(quote) {
         //db.createCollection('quotes', {w:1}, function(err, collection) {});
@@ -54,9 +72,8 @@ QuotesProvider = {
                 callback(err)
             }
             else {
-                console.log(ok);
-                quotes = ok;
-                callback(null, quotes);
+                //console.log(ok);
+                callback(null, ok);
             }
         });
     }
@@ -66,5 +83,5 @@ QuotesProvider = {
 
 
 
-
+module.exports.docProvider = DocProvider;
 module.exports.quotesProvider = QuotesProvider;

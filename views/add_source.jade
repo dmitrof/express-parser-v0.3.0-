@@ -1,0 +1,19 @@
+//
+   Created by Дмитрий on 06.12.2016.
+extends layout
+
+block content
+    h1= title
+    //p Hello page shown HELLO HELLO HELLO #{title}
+
+    form(action='/add_source/', name="add_source_form", method="post")
+        div.input
+            span.label source_type
+            input(type="text", name="name", placeholder="name")
+            div.input
+                span.label url
+                input(type="text", name="quote", placeholder="quote")
+        div.actions
+            input(type="submit", value="add")
+
+    h1= qresponse
