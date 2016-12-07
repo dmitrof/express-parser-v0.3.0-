@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var app = express();
+var app = require('express')();
 var debug = require('debug')('express-parser-3:server');
 var http = require('http');
 ////////////////////////////////////////////
@@ -25,7 +25,7 @@ app.use('/users', users);
 
 /* DB VARIABLES */
 var dbHelper = require('./dbHelper');
-
+//app.set('port', process.env.PORT || 3000);
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
@@ -36,8 +36,12 @@ dbHelper.initDB(function(err) {
         throw err;
     }
 
-    console.log('listening to port 3000');
-    app.listen(port); //database is initialized, ready to listen for connections
+    //console.log('listening to port 3000');
+    var server = app.listen(app.get('port'), function() {
+        debug('Express server listening on port ' + server.address().port);
+        console.log('listening to port 3000');
+    });
+    //app.listen(port); //database is initialized, ready to listen for connections
     this.db = require('./dbHelper').db;
     this.yParser = require('./yParser').yParser;
     this.yParser.setDB(db);
@@ -53,7 +57,7 @@ app.get('/what/', function(req, res) {
 
 
 app.get('/add_quote', function(req, res) {
-    res.render('add_quote', {title : "HELLO___PAGE"});
+    res.render('add_quote', {title : "HELLO_PAGE"});
 });
 
 app.get('/add_yt', function(req, res) {
@@ -64,9 +68,9 @@ app.get('/add_yt', function(req, res) {
 
 });
 
-app.get('sources_list', function(req, res) {
+app.get('/sources_list', function(req, res) {
     //sources list and form
-    res.render('sources_list', {title : "sources_list"});
+    res.render('add_source', {title : "Sources listttttttttt"});
 });
 
 app.post('/add_source', function(req, res) {
@@ -74,7 +78,7 @@ app.post('/add_source', function(req, res) {
         source_type = req.body.source_type;
     console.log(source_type.concat(url));
     app.parserRouter.addSource(req.body);
-    res.render('add_quote', {qresponse : qresponse});
+    res.render('add_source', {title : "Sources list", qresponse : qresponse});
 });
 
 

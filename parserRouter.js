@@ -15,7 +15,9 @@ module.exports.parserRouter = {
     source_types : require('./source_types'),
     //adding source to database. URL validation required
     addSource : function(source, source_type, callback) {
+        validateParser(source_type, function(err, result) {
 
+        });
     },
     //validate URL here
     validateParser : function(parserInfo, callback) {
