@@ -74,11 +74,17 @@ app.get('/sources_list', function(req, res) {
 });
 
 app.post('/add_source', function(req, res) {
-    var source_url = req.body.sousrce_url,
+    var source_url = req.body.source_url,
         source_type = req.body.source_type;
     console.log(source_type.concat(url));
-    app.parserRouter.addSource(req.body);
-    res.render('add_source', {title : "Sources list", qresponse : qresponse});
+    app.parserRouter.addSource(source_url, source_type, function(err, ok) {
+        if (err) {
+            console.log(err);
+            res.render('add_source', {title : "Sources list", qresponse : err});
+        }
+        res.render('add_source', {title : "Sources list", qresponse : ok});
+    });
+
 });
 
 

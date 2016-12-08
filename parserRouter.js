@@ -17,16 +17,26 @@ module.exports.parserRouter = {
 
     //adding source to database. URL validation required
     addSource : function(source_url, source_type, callback) {
-        var sourceAddedPromises = [];
+        var promises = [];
         var parser;
         p = new Promise(function(resolve, reject) {
             this.getParser(source_url, source_type, function(err, _parser) {
-                if (err) {console.log(err); reject('source was not validated')}
+                if (err) {
+                    console.log(err);
+                    reject('source was not validated')
+                }
                 parser = _parser;
                 resolve('source is validated')
             })
         });
-        p.then();
+        p.then(function(){}, function(reason){
+            callback(reason);
+        });
+        promises.push(p);
+        Promise.all(promises).then(function() {
+            callback(null, 'Source is added!');
+        })
+
 
 
 
@@ -36,7 +46,7 @@ module.exports.parserRouter = {
     getParser : function(source_url, source_type, callback) {
         var parser;
         if (source_type != null) {  //get parser from source_type
-            parserType = this.source_types[source_type];
+            parserType = this.sources_types[source_type];
             callback(null, parser);
             var urls_list = this.sources_urls[parserType];
             //доделать ДОМЕН
