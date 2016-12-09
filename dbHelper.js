@@ -60,17 +60,18 @@ module.exports.initDB = function(callback) {
 
 
 //класс для работы с "абстрактными" документами в БД
-DocProvider = {
-    addDoc : function(doc, collection, callback) {
+ItemProvider = {
+    saveDoc : function(item, _collection, callback) {
         //db.createCollection('quotes', {w:1}, function(err, collection) {});
         var collection = db.collection(_collection);
-        collection.insert(doc, function(err, ok) {
+        collection.update({item_id: item.item_id} ,item, {upsert : true},function(err, ok) {
             if (err) {
                 console.log(err);
                 callback(err);
             }
             else {
-                console.log('saved to db');
+                //console.log(item.item_id + ' saved to db');
+                ok = item.item_id + ' saved to db';
                 callback(null, ok)
             }
         });
@@ -130,5 +131,5 @@ module.exports.saveSource = function(source, callback, argv) {
 };
 
 
-module.exports.docProvider = DocProvider;
+module.exports.itemProvider = ItemProvider;
 module.exports.quotesProvider = QuotesProvider;

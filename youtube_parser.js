@@ -10,7 +10,7 @@ youTube.setKey(ACCESS_TOKEN);
 //db connection must be initialized at this step
 dbHelper = require('./dbHelper');
 db = dbHelper.db;
-docProvider = dbHelper.docProvider;
+itemProvider = dbHelper.itemProvider;
 module.exports.setDB = function(_db) {
     this.db = _db;
 };
@@ -40,7 +40,7 @@ request.get(cv, function(err, header, body) {
 
 
 
-//Эта функция должна забрать инфо о всех видео и плейлистах на канале
+
 var getChannelId = function(url) {
     return 'UCKPbiit_j8ycmkutM0wVzdA';
 };
@@ -54,12 +54,14 @@ var playListSchema = function(rawItem) {
 };
 
 //schema of youtube video item
-var videoSchema = function(rawItem) {
+var videoSchema = function(rawItem, source_url) {
     item = {};
     item.item_id = rawItem.id.videoId; item.type = 'youtube_video';
-    item.name = rawItem.snipped.title; item.source = source_id;
-    item.added_by = 'testUser'; item.owner = rawItem.snipped.channelId;
-    
+    item.name = rawItem.snippet.title; item.source = source_url;
+    item.added_by = 'testUser'; item.owner = rawItem.snippet.channelId;
+    item.body = rawItem.snippet;
+    return item;
+
 
 };
 
@@ -70,7 +72,7 @@ var parseDefault = function(source_url, callback) {
     if (source_url.includes('channel')) {
         console.log('parsing channelID');
         channelId = getChannelId(source_url);
-        req = 'https://www.googleapis.com/youtube/v3/search?key=access_token&channelId=ch_id&part=snippet,id&order=date&maxResults=20';
+        req = 'https://www.googleapis.com/youtube/v3/search?key=access_token&channelId=ch_id&part=snippet,id&order=date&maxResults=10';
         req = req.replace('access_token', ACCESS_TOKEN); req = req.replace('ch_id', channelId);
         console.log(req);
         request.get(req, function(err, header, body) {
@@ -80,13 +82,18 @@ var parseDefault = function(source_url, callback) {
                 return;
             }
             body = JSON.parse(body);
-            itemList = [];
-            rawItems = body.items;
+            var itemList = [];
+            var rawItems = body.items;
             //console.log(body);
             for (i in rawItems) {
-                rawItem = rawItems[i];
-                console.log(rawItem.id.videoId);
-                item = videoSchema(rawItem)
+                var rawItem = rawItems[i];
+                //console.log(rawItem.id.videoId);
+                var item = videoSchema(rawItem);
+                console.log(item.item_id);
+                itemProvider.saveDoc(item, 'items', function(err, ok) {
+                    if (err) {console.log(err)}
+                    console.log(ok);
+                });
                 //console.log(itemList[item]);
             }
 
@@ -111,7 +118,7 @@ module.exports.yParser = {
             }
             else {
                 console.log(JSON.stringify(result, null, 2));
-                docProvider.addDoc(result, 'testdocs', function(err, ok) {
+                itemProvider.saveDoc(result, 'testdocs', function(err, ok) {
                     if (err) {console.log(err)}
                     console.log(ok);
                 });

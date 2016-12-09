@@ -4,7 +4,7 @@
 
 dbHelper = require('./dbHelper');
 db = dbHelper.db;
-docProvider = dbHelper.docProvider;
+itemProvider = dbHelper.itemProvider;
 db.collection('quotes');
 
 module.exports.setDB = function(_db) {
