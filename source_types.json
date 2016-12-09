@@ -1,5 +1,5 @@
 {
-  "Youtube" : "yParser",
+  "Youtube" : "youtube_parser",
   "WebDictionary" : "WebDictParser",
   "Jisho" : "JishoParser"
 }

@@ -43,9 +43,9 @@ dbHelper.initDB(function(err) {
     });
     //app.listen(port); //database is initialized, ready to listen for connections
     this.db = require('./dbHelper').db;
-    this.yParser = require('./yParser').yParser;
+    this.yParser = require('./youtube_parser').yParser;
     this.yParser.setDB(db);
-    this.parserRouter = require('./parserRouter').parserRouter;
+    this.SourceManager = require('./SourceManager');
 });
 
 var quotesProvider = require('./dbHelper').quotesProvider;
@@ -76,11 +76,13 @@ app.get('/sources_list', function(req, res) {
 app.post('/add_source', function(req, res) {
     var source_url = req.body.source_url,
         source_type = req.body.source_type;
-    console.log(source_type.concat(url));
-    app.parserRouter.addSource(source_url, source_type, function(err, ok) {
+    console.log(source_url);
+    console.log(source_type);
+    this.SourceManager.addSource(source_url, source_type, function(err, ok) {
         if (err) {
             console.log(err);
             res.render('add_source', {title : "Sources list", qresponse : err});
+            return;
         }
         res.render('add_source', {title : "Sources list", qresponse : ok});
     });
