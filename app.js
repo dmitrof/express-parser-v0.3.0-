@@ -24,7 +24,7 @@ app.use('/', routes);
 app.use('/users', users);
 
 /* DB VARIABLES */
-var dbHelper = require('./dbHelper');
+var dbHelper = require('./libs/dbHelper');
 //app.set('port', process.env.PORT || 3000);
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
@@ -42,10 +42,10 @@ dbHelper.initDB(function(err) {
         console.log('listening to port 3000');
     });
     //app.listen(port); //database is initialized, ready to listen for connections
-    this.db = require('./dbHelper').db;
-    this.yParser = require('./youtube_parser').yParser;
+    this.db = require('./libs/dbHelper').db;
+    this.yParser = require('./libs/youtube_parser').yParser;
     this.yParser.setDB(db);
-    this.SourceManager = require('./SourceManager');
+    this.SourceManager = require('./libs/SourceManager');
 });
 
 

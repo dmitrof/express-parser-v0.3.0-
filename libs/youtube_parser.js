@@ -7,7 +7,7 @@ var youTube = new YouTube();
 var request = require('request');
 var ACCESS_TOKEN = 'AIzaSyA1faslXR56EAbtZz9LFHsUtZeYXr4SOTw';
 youTube.setKey(ACCESS_TOKEN);
-//db connection must be initialized at this step
+//db db must be initialized at this step
 dbHelper = require('./dbHelper');
 db = dbHelper.db;
 itemProvider = dbHelper.itemProvider;

@@ -31,7 +31,8 @@ sourceSchema.methods.attachExtras = function(_extras) {
 
 //item schema - модель единицы учебного контента
 var itemSchema = new Schema({
-    source_url : { type: String, required: true, unique: true },    //ссылается на source_url SourceSchema
+    item_id : { type: String, unique: true, required: true }, //id генерируется парсером на основе uri айтема или его содержимого
+    source_url : { type: String, required: true },    //ссылается на source_url SourceSchema
     item_type : {type: String, required: true},
     item_description : String,
     created_at : Date,
@@ -44,9 +45,15 @@ itemSchema.methods.attachExtras = function(_extras) {
     // add some stuff to the users name
     this.extras = _extras;
 
-    return this.name;
+    return this.extras;
 };
 
+itemSchema.methods.attachBody = function(_body) {
+    // add some stuff to the users name
+    this.extras = _body;
+
+    return this.body;
+};
 
 
 

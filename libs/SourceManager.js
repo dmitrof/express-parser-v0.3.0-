@@ -12,8 +12,8 @@ module.exports.setDB = function(_db) {
 };
 
 
-    sources_types = require('./source_types');
-    sources_urls = require('./source_domain');
+    sources_types = require('./../config/source_types');
+    sources_urls = require('./../config/source_domain');
 
     //adding source to database. URL validation required
     var addSource = function(source_url, source_type, callback) {
