@@ -35,17 +35,20 @@ dbHelper.initDB(function(err) {
         console.log(err);
         throw err;
     }
-
+    
+    require('./libs/schemas');
+    require('./libs/test_schemas');
     //console.log('listening to port 3000');
     var server = app.listen(app.get('port'), function() {
         debug('Express server listening on port ' + server.address().port);
         console.log('listening to port 3000');
     });
+        //test some mongoose queries
     //app.listen(port); //database is initialized, ready to listen for connections
-    this.db = require('./libs/dbHelper').db;
-    this.yParser = require('./libs/youtube_parser').yParser;
-    this.yParser.setDB(db);
-    this.SourceManager = require('./libs/SourceManager');
+    //this.db = require('./libs/dbHelper').db;
+    //this.yParser = require('./libs/youtube_parser').yParser;
+    //this.yParser.setDB(db);
+    //this.SourceManager = require('./libs/SourceManager');
 });
 
 
