@@ -48,17 +48,10 @@ dbHelper.initDB(function(err) {
     this.SourceManager = require('./SourceManager');
 });
 
-var quotesProvider = require('./dbHelper').quotesProvider;
+
 
 // catch 404 and forward to error handler
-app.get('/what/', function(req, res) {
-    res.send('Hello World')
-});
 
-
-app.get('/add_quote', function(req, res) {
-    res.render('add_quote', {title : "HELLO_PAGE"});
-});
 
 app.get('/add_yt', function(req, res) {
     this.yParser.addVideoById('Im69kzhpR3I', function(err, tr_state) {
@@ -90,24 +83,8 @@ app.post('/add_source', function(req, res) {
 });
 
 
-app.get('/quotes', function(req, res) {
-    var collection = db.collection('quotes');
-    var quotes;
-    quotesProvider.getAllQuotes(function(err, quotes) {
-        if (err) {console.log(err)}
-        //console.log(quotes);
-        res.send(quotes.toArray());
-    })
-});
 
-app.post('/add_quote', function(req, res) {
-    var name = req.body.name,
-        quote = req.body.quote;
-    console.log(name.concat(quote));
-    var qresponse = name.concat(" ").concat(quote).concat(" quote added");
-    quotesProvider.addQuote(req.body);
-    res.render('add_quote', {qresponse : qresponse});
-});
+
 
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
